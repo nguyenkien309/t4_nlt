@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 
-export class QueryDto {
+export class UploadFileQueryDto {
   @ApiProperty()
   @IsOptional()
-  response_type?: any;
+  uuid: string;
 
   @ApiProperty()
   @IsOptional()
-  client_id?: any;
+  seal: string;
 
   @ApiProperty()
   @IsOptional()
-  redirect_uri?: any;
+  extra: string;
 }

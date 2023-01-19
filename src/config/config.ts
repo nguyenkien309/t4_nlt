@@ -47,3 +47,6 @@ export const CLOUD_API_SECRET = process.env.CLOUD_API_SECRET;
 // GOOGLE AUTH
 export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 export const GOOGLE_SECRET = process.env.GOOGLE_SECRET;
+
+// DAILYMOTION
+export const DM_CHANNEL_OWNER = process.env.DM_CHANNEL_OWNER;
