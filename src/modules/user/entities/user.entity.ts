@@ -19,11 +19,11 @@ export class UserEntity extends DateAudit {
   @Column({ name: 'username', nullable: true })
   username: string;
 
+  @Column({ name: 'password', nullable: true })
+  password: string;
+
   @Column({ name: 'access_token', nullable: true })
   access_token: string;
-
-  @Column({ nullable: true })
-  password: string;
 
   @Column({ default: 'partner', nullable: true })
   role: string;

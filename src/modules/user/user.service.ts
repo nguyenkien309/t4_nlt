@@ -25,4 +25,8 @@ export class UserService extends BaseService<UserEntity, UserRepository> {
   findById(id: EntityId): Promise<UserEntity> {
     return this.findById(id);
   }
+
+  findByEmail(username: string): Promise<UserEntity | null> {
+    return this.repository.findOne({ where: { username: username } });
+  }
 }
