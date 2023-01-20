@@ -59,3 +59,7 @@ export const GOOGLE_SECRET = process.env.GOOGLE_SECRET;
 // DAILYMOTION
 export const DM_CHANNEL_OWNER = process.env.DM_CHANNEL_OWNER;
 export const DM_API = process.env.DM_API;
+
+// HTTP
+export const HTTP_TIMEOUT = process.env.HTTP_TIMEOUT;
+export const HTTP_MAX_REDIRECTS = process.env.HTTP_MAX_REDIRECTS;

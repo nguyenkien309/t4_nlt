@@ -1,42 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  Length,
-  Validate,
-} from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class LoginRequestDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  grant_type: string;
-
-  @ApiProperty()
+  @ApiProperty({ example: 'nvk309@gmail.com' })
   @IsNotEmpty()
   username: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '12345678' })
   @IsNotEmpty()
   password: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  scope: any;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  client_id: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  client_secret: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  redirect_uri: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  code: string;
 }
