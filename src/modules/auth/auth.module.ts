@@ -15,7 +15,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { UploadModule } from '../upload/upload.module';
 
 @Module({
-  imports: [ConfigModule, HttpModule, UserModule, UploadModule],
+  imports: [ConfigModule, HttpModule, UserModule],
   controllers: [AuthController],
   providers: [AuthService, ConfigService, LoggerService],
   exports: [AuthService],
