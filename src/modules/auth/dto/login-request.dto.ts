@@ -10,15 +10,15 @@ import {
 export class LoginRequestDto {
   @ApiProperty()
   @IsNotEmpty()
-  grant_type: any;
+  grant_type: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  username: any;
+  username: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  password: any;
+  password: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -26,17 +26,17 @@ export class LoginRequestDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  client_id: any;
+  client_id: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  client_secret: any;
+  client_secret: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  redirect_uri: any;
+  redirect_uri: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  code: any;
+  code: string;
 }

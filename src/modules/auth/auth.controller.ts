@@ -16,13 +16,20 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { LoginRequestDto } from './dto/login-request.dto';
 import { UploadFileQueryDto } from '../upload/dto/upload-file.dto';
-import { PublicVideoDto } from './dto/public-video.dto';
+import { PublicVideoDto } from '../upload/dto/public-video.dto';
+import { BaseResponseDto } from 'src/base/base.dto';
+import { UserEntity } from '../user/entities/user.entity';
+import { plainToInstance, plainToClass } from 'class-transformer';
+import { HttpServiceInterceptor } from '../http-module/http-module.service';
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
   @Get('/oauth/token')
-  async login(@Body() auth: LoginRequestDto) {
-    return await this.authService.login(auth);
+  async login(@Body() auth: LoginRequestDto): Promise<BaseResponseDto<any>> {
+    const data = await this.authService.login(auth);
+    return new BaseResponseDto<any>(plainToInstance(UserEntity, data));
   }
 
   @Get('/oauth/profile')
@@ -33,11 +40,6 @@ export class AuthController {
   @Get('/callback')
   async callBack(@Req() req) {
     return req.query;
-  }
-
-  @Get('/redis')
-  async redis() {
-    return this.authService.getRedisLoginToken();
   }
 
   @Get('/get-upload-url')

@@ -1,21 +1,31 @@
+import {
+  Injectable,
+  UnauthorizedException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { EntityId } from 'typeorm/repository/EntityId';
+import { UploadRepository } from './upload.repository';
+import { LoggerService } from 'src/logger/custom.logger';
+import { BaseService } from 'src/base/base.service';
+import { UploadVideoEntity } from './entities/upload-video.entity';
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
-import { Body } from '@nestjs/common/decorators/http/route-params.decorator';
-
+import { DM_API, DM_CHANNEL_OWNER } from 'src/config/config';
+import { AuthService } from '../auth/auth.service';
+import FormData = require('form-data');
 @Injectable()
-export class UploadService {
-  constructor(private readonly httpService: HttpService) {}
-  async getUrl() {
-    const response = await this.httpService
-      .get('https://api.dailymotion.com/file/upload')
-      .toPromise();
-
-    return response.data;
-  }
-  async uploadFile() {
-    return;
-  }
-  async publicVideo() {
-    return;
+export class UploadService extends BaseService<
+  UploadVideoEntity,
+  UploadRepository
+> {
+  constructor(
+    @InjectDataSource() private readonly dataSource: DataSource,
+    repository: UploadRepository,
+    logger: LoggerService,
+    private readonly httpService: HttpService,
+  ) {
+    super(repository, logger);
   }
 }

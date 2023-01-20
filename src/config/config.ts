@@ -26,6 +26,14 @@ export const JWT_REFESH_EXPIRES_IN = process.env.JWT_REFESH_EXPIRES_IN;
 export const JWT_REFRESH_TOKEN_EXPIRATION =
   process.env.JWT_REFRESH_TOKEN_EXPIRATION;
 
+// DATABASE
+export const DATABASE_CONNECTION =
+  process.env.DATABASE_CONNECTION || 'postgres';
+export const DATABASE_HOST = process.env.DATABASE_HOST || 'localhost';
+export const DATABASE_PORT = parseInt(process.env.DATABASE_PORT, 10) || 5432;
+export const DATABASE_USERNAME = process.env.DATABASE_USERNAME || 'postgres';
+export const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || 'kiendzpro21';
+export const DATABASE_DB_NAME = process.env.DATABASE_DB_NAME || 't4_nlt';
 // FILE
 export const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE, 10);
 export const UPLOAD_LOCATION = process.env.UPLOAD_LOCATION;
@@ -50,3 +58,4 @@ export const GOOGLE_SECRET = process.env.GOOGLE_SECRET;
 
 // DAILYMOTION
 export const DM_CHANNEL_OWNER = process.env.DM_CHANNEL_OWNER;
+export const DM_API = process.env.DM_API;

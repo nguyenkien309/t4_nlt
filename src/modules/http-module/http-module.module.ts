@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { HttpService } from './http-module.service';
+import { HttpService } from '@nestjs/axios';
 
 @Module({
   providers: [HttpService],

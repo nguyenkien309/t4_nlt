@@ -10,5 +10,13 @@ import {
 export class PublicVideoDto {
   @ApiProperty()
   @IsNotEmpty()
-  url: any;
+  url: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  title: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  channel: string;
 }

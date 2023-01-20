@@ -11,61 +11,55 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as uuid from 'uuid';
 import FormData = require('form-data');
-import { PublicVideoDto } from './dto/public-video.dto';
+import { PublicVideoDto } from '../upload/dto/public-video.dto';
+import { UserService } from '../user/user.service';
+import { UserEntity } from '../user/entities/user.entity';
+import { UploadService } from '../upload/upload.service';
+import { UploadVideoEntity } from '../upload/entities/upload-video.entity';
+import { PublicVideoEntity } from '../upload/entities/public-video.entity';
+import { DM_API, DM_CHANNEL_OWNER } from 'src/config/config';
+
 @Injectable()
 export class AuthService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly redisService: RedisService,
+    private readonly userService: UserService,
+    private readonly uploadService: UploadService,
   ) {}
   async login(auth: LoginRequestDto) {
     const response = await this.httpService
-      .post('https://api.dailymotion.com/oauth/token', auth, {
+      .post(`${DM_API}/oauth/token`, auth, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       })
       .toPromise();
-    await this.redisService.set('userToken', response.data.access_token, 36000);
-
+    const user = new UserEntity(auth);
+    user.id = response.data.uid;
+    user.access_token = response.data.access_token;
+    user.role = 'admin';
+    await this.userService._store(user);
     return response.data;
   }
 
   async profile() {
-    const response = await this.httpService
-      .get(`https://api.dailymotion.com/auth`)
-      .toPromise();
+    const response = await this.httpService.get(`${DM_API}/auth`).toPromise();
     return response.data;
   }
 
-  async getRedisLoginToken() {
-    return await this.redisService.get('userToken');
-  }
-
-  async getRedisUrlUpload() {
-    return await this.redisService.get('uploadUrl');
-  }
-
-  async getUploadedFile() {
-    return await this.redisService.get('uploadedFile');
-  }
-
   async getUploadUrl() {
-    const token = await this.getRedisLoginToken();
     const response = await this.httpService
-      .get('https://api.dailymotion.com/file/upload', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .get(`${DM_API}/file/upload`)
       .toPromise();
-    await this.redisService.set('uploadUrl', response.data.upload_url, 36000);
     return response.data.upload_url;
   }
 
   async uploadFile(file: Express.Multer.File) {
     const url = await this.getUploadUrl();
+    const auth = await this.profile();
     const formData = new FormData();
-    const fileExtension = file.originalname.split('.').pop();
-    const fileName = uuid.v4() + '.' + fileExtension;
-    await formData.append('file', file.buffer, { filename: fileName });
+    // const fileExtension = file.originalname.split('.').pop();
+    // const fileName = uuid.v4() + '.' + fileExtension;
+    await formData.append('file', file.buffer, { filename: file.originalname });
 
     const response = await this.httpService
       .post(url, formData, {
@@ -75,28 +69,27 @@ export class AuthService {
         },
       })
       .toPromise();
-    await this.redisService.set('uploadedFile', response.data.url, 36000);
+    const uploadVideo = new UploadVideoEntity(response.data);
+    uploadVideo.id = auth.id;
+    await this.uploadService._store(uploadVideo);
     return response.data;
   }
 
   async publicVideo(publicVideoDto: PublicVideoDto) {
-    // const uploadedFile = await this.getUploadedFile();
-    const token = await this.getRedisLoginToken();
-    console.log('UP', publicVideoDto);
-
-    const channel = this.configService.get('DM_CHANNEL_OWNER');
+    const auth = await this.profile();
     const response = await this.httpService
-      .post(
-        `https://api.dailymotion.com/user/${channel}/videos`,
-        publicVideoDto,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
+      .post(`${DM_API}/user/${DM_CHANNEL_OWNER}/videos`, publicVideoDto, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-      )
+      })
       .toPromise();
+    const exist = await this.uploadService._findById(publicVideoDto.url);
+    if (exist) {
+      const publicVideo = new UploadVideoEntity(response.data);
+      publicVideo.owner = auth.id;
+      await this.uploadService._store(publicVideo);
+    }
     return response.data;
   }
 }

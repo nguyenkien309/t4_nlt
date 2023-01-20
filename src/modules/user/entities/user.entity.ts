@@ -8,15 +8,13 @@ import {
   PrimaryGeneratedColumn,
   Unique,
   OneToMany,
+  PrimaryColumn,
 } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class UserEntity extends DateAudit {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ name: 'uid', nullable: true })
-  uid: string;
+  @PrimaryColumn()
+  id: string;
 
   @Column({ name: 'username', nullable: true })
   username: string;
@@ -26,6 +24,9 @@ export class UserEntity extends DateAudit {
 
   @Column({ nullable: true })
   password: string;
+
+  @Column({ default: 'partner', nullable: true })
+  role: string;
 
   constructor(partial: Partial<UserEntity>) {
     super();
