@@ -25,10 +25,7 @@ export class UploadController {
 
   @Get('/get-upload-url')
   async getUploadUrl() {
-    const url = await this.uploadService.getUploadUrl();
-    return new BaseResponseDto<UploadVideoEntity>(
-      plainToClass(UploadVideoEntity, url),
-    );
+    return await this.uploadService.getUploadUrl();
   }
 
   @UseInterceptors(FileInterceptor('file'))

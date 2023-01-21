@@ -19,4 +19,8 @@ export class PublicVideoDto {
   @ApiProperty()
   @IsNotEmpty()
   channel: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  is_created_for_kids: boolean;
 }

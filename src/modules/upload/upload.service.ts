@@ -53,8 +53,7 @@ export class UploadService extends BaseService<
       })
       .toPromise();
     const uploadVideo = new UploadVideoEntity(response.data);
-    uploadVideo.id = auth.id;
-    await this._store(uploadVideo);
+    await this.repository.save(uploadVideo);
     return response.data;
   }
 
@@ -67,12 +66,16 @@ export class UploadService extends BaseService<
         },
       })
       .toPromise();
-    const exist = await this._findById(publicVideoDto.url);
+    const exist = await this.repository.findOne({
+      where: { url: publicVideoDto.url },
+    });
     if (exist) {
-      const publicVideo = new UploadVideoEntity(response.data);
-      publicVideo.owner = auth.id;
-      await this._store(publicVideo);
+      exist.title = publicVideoDto.title;
+      exist.channel = publicVideoDto.channel;
+      exist.is_created_for_kids = publicVideoDto.is_created_for_kids;
+      exist.owner = auth.id;
+      await this.repository.save(exist);
     }
-    return response.data;
+    return exist;
   }
 }

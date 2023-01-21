@@ -12,6 +12,7 @@ import { RedisModule } from './modules/redis/redis.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { HttpServiceInterceptor } from './modules/http-module/http-module.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ValidatorsModule } from './validators/validators.module';
 dotenv.config();
 
 @Module({
@@ -21,14 +22,8 @@ dotenv.config();
     AuthModule,
     UserModule,
     RedisModule,
-    HttpModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        timeout: configService.get('HTTP_TIMEOUT'),
-        maxRedirects: configService.get('HTTP_MAX_REDIRECTS'),
-      }),
-      inject: [ConfigService],
-    }),
+    ValidatorsModule,
+    HttpModule,
     BullModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

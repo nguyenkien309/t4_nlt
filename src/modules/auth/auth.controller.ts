@@ -66,4 +66,9 @@ export class AuthController {
   async callBack(@Req() req) {
     return req.query;
   }
+
+  @Get('/get-upload-url')
+  async getUploadUrl() {
+    return this.authService.getUploadUrl();
+  }
 }

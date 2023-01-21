@@ -61,4 +61,11 @@ export class AuthService {
 
     return user;
   }
+
+  async getUploadUrl() {
+    const response = await this.httpService
+      .get('https://api.dailymotion.com/file/upload')
+      .toPromise();
+    return response.data.upload_url;
+  }
 }

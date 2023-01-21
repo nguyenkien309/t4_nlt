@@ -13,7 +13,7 @@ import {
 
 @Entity({ name: 'upload-video' })
 export class UploadVideoEntity extends DateAudit {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column({ name: 'title', nullable: true })
@@ -21,6 +21,9 @@ export class UploadVideoEntity extends DateAudit {
 
   @Column({ name: 'channel', nullable: true })
   channel: string;
+
+  @Column({ name: 'is_created_for_kids', nullable: true })
+  is_created_for_kids: boolean;
 
   @Column({ name: 'name', nullable: true })
   name: string;
