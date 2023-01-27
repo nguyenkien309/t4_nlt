@@ -13,11 +13,19 @@ import { LoggerService } from 'src/logger/custom.logger';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entities/user.entity';
 import { UploadModule } from '../upload/upload.module';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { SessionSerializer } from './strategies/Serializer';
 
 @Module({
   imports: [ConfigModule, HttpModule, UserModule],
   controllers: [AuthController],
-  providers: [AuthService, ConfigService, LoggerService],
+  providers: [
+    AuthService,
+    ConfigService,
+    LoggerService,
+    GoogleStrategy,
+    SessionSerializer,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

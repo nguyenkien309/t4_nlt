@@ -22,11 +22,14 @@ export class UserService extends BaseService<UserEntity, UserRepository> {
     super(repository, logger);
   }
 
-  findById(id: EntityId): Promise<UserEntity> {
-    return this.findById(id);
+  async saveUser(payload: any): Promise<UserEntity> {
+    return await this._store(payload);
+  }
+  async findUser(payload: any): Promise<UserEntity> {
+    return await this._findById(payload);
   }
 
-  findByEmail(username: string): Promise<UserEntity | null> {
-    return this.repository.findOne({ where: { username: username } });
+  async findByEmail(username: string): Promise<UserEntity | null> {
+    return await this.repository.findOne({ where: { username: username } });
   }
 }

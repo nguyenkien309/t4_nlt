@@ -1,3 +1,4 @@
+import { PassportModule } from '@nestjs/passport';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -24,6 +25,7 @@ dotenv.config();
     RedisModule,
     ValidatorsModule,
     HttpModule,
+    PassportModule.register({ session: true }),
     BullModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

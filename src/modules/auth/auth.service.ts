@@ -13,7 +13,6 @@ import { RedisService } from '../redis/redis.service';
 import { UploadFileQueryDto } from '../upload/dto/upload-file.dto';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as uuid from 'uuid';
 import FormData = require('form-data');
 import { PublicVideoDto } from '../upload/dto/public-video.dto';
 import { UserService } from '../user/user.service';
@@ -24,12 +23,25 @@ import { DM_API, DM_CHANNEL_OWNER } from 'src/config/config';
 import { LoginRequestDto } from './dto/login-request.dto';
 import * as bcrypt from 'bcrypt';
 import { ErrorMessageCode } from 'src/constants';
+import { GoogleRequestDto } from './dto/google-auth.dto';
 @Injectable()
 export class AuthService {
   constructor(
     private readonly httpService: HttpService,
     private readonly userService: UserService, // private readonly uploadService: UploadService,
   ) {}
+  async validateGoogleUser(googleDto: GoogleRequestDto) {
+    const user = await this.userService.findByEmail(googleDto.email);
+    console.log('GET USER', user);
+    if (user) return user;
+    const payload = {
+      id: googleDto.id,
+      username: googleDto.email,
+      access_token: googleDto.accessToken,
+    };
+    return await this.userService.saveUser(payload);
+  }
+
   async getAccessDM(auth: DailyMotionRequestDto) {
     const response = await this.httpService
       .post(`${DM_API}/oauth/token`, auth, {

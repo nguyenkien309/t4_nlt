@@ -12,6 +12,7 @@ import {
   UseInterceptors,
   HttpStatus,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DailyMotionRequestDto } from './dto/daily-request.dto';
@@ -24,6 +25,8 @@ import { HttpServiceInterceptor } from '../http-module/http-module.service';
 import { LoginRequestDto } from './dto/login-request.dto';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { UserService } from '../user/user.service';
+import { AuthGuard } from '@nestjs/passport';
+import { GoogleAuthGuard } from './guards/google-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -31,6 +34,24 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
   ) {}
+
+  @Get()
+  @UseGuards(AuthGuard('google'))
+  async googleAuth2(@Req() req) {
+    return;
+  }
+
+  @Get('/google/callback')
+  @UseGuards(AuthGuard('google'))
+  googleAuthRedirect(@Req() req) {
+    return;
+  }
+
+  @Get('google/login')
+  @UseGuards(AuthGuard('google'))
+  handleLogin() {
+    return { msg: 'Google Authentication' };
+  }
 
   @Get('/oauth/token')
   async getAccessDM(

@@ -6,6 +6,8 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as session from 'express-session';
+import * as passport from 'passport';
 
 dotenv.config();
 
@@ -20,6 +22,20 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
   });
+
+  app.use(
+    session({
+      secret: configService.get<string>('COOKIE_SECRET'),
+      saveUninitialized: false,
+      resave: false,
+      cookie: {
+        maxAge: 60000,
+      },
+    }),
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   const config = new DocumentBuilder()
     .setTitle('API')
